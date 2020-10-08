@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MaterialTable from 'material-table';
 import styles from './CusomterList.css';
 import db from '../../utils/db';
@@ -23,6 +23,12 @@ export default function CustomerList(): JSX.Element {
   const [searchText] = useState('');
 
   const [customers, setCustomers] = useState<Customer[] | []>([]);
+
+  useEffect(() => {
+    db.customers.find({}).then((customers) => {
+      setCustomers(customers);
+    });
+  }, []);
   return (
     <div className={styles.container} data-tid="container">
       <div className={styles.tableContainer}>
