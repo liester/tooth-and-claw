@@ -3,11 +3,7 @@ const Datastore = require('nedb-promises');
 
 const dbFactory = (fileName) =>
   Datastore.create({
-    filename: `${
-      process.env.NODE_ENV === 'dev'
-        ? '.'
-        : (app || remote.app).getAppPath('userData')
-    }/data/${fileName}`,
+    filename: `./data/${fileName}`,
     timestampData: true,
     autoload: true,
   });
