@@ -1,8 +1,8 @@
 {
   "name": "electron-react-boilerplate",
-  "productName": "ElectronReact",
-  "version": "1.3.1",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "productName": "Tooth and Claw",
+  "version": "1.0.0",
+  "description": "Customer Management Application for the Tooth and Claw Tattoo Shop",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development webpack --config ./configs/webpack.config.renderer.dev.dll.babel.js --colors",
@@ -37,7 +37,7 @@
     "test-watch": "yarn test --watch"
   },
   "build": {
-    "productName": "ElectronReact",
+    "productName": "Tooth and Claw",
     "appId": "org.develar.ElectronReact",
     "files": [
       "dist/",

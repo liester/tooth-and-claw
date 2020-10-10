@@ -11,7 +11,9 @@ import {
   selectCount,
 } from './counterSlice';
 
-export default function Counter() {
+export default function Counter(props: any) {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { userId } = props;
   const dispatch = useDispatch();
   const value = useSelector(selectCount);
   return (
@@ -22,6 +24,7 @@ export default function Counter() {
         </Link>
       </div>
       <div className={`counter ${styles.counter}`} data-tid="counter">
+        <div>{userId}</div>
         {value}
       </div>
       <div className={styles.btnGroup}>

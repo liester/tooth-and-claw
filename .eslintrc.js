@@ -3,6 +3,10 @@ module.exports = {
   rules: {
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
+    'promise/catch-or-return': 'off',
+    'no-underscore-dangle': ['error', { allow: ['_id'] }],
+    'promise/always-return': 'off',
+    'react/destructuring-assignment': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

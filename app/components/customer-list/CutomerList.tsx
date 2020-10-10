@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import MaterialTable from 'material-table';
+import { useHistory } from 'react-router-dom';
 import styles from './CusomterList.css';
 import db from '../../utils/db';
+import routes from '../../constants/routes.json';
 
 interface Customer {
-  id: any;
+  _id: any;
   name: string;
   email: string;
   phone: string;
@@ -20,13 +22,15 @@ const columns = [
 ];
 
 export default function CustomerList(): JSX.Element {
+  const history = useHistory();
   const [searchText] = useState('');
 
   const [customers, setCustomers] = useState<Customer[] | []>([]);
 
   useEffect(() => {
-    db.customers.find({}).then((customers) => {
-      setCustomers(customers);
+    db.customers.find<Customer>({}).then((dbCustomers) => {
+      setCustomers(dbCustomers);
+      return dbCustomers;
     });
   }, []);
   return (
@@ -46,6 +50,17 @@ export default function CustomerList(): JSX.Element {
             searchText: searchText || '',
             actionsColumnIndex: -1,
           }}
+          actions={[
+            {
+              icon: 'note',
+              tooltip: 'Add Note',
+              onClick: (_event, rowData) => {
+                if ('_id' in rowData) {
+                  history.push(`${routes.COUNTER}/${rowData._id}`);
+                }
+              },
+            },
+          ]}
           editable={{
             onRowAdd: (newData) =>
               new Promise((resolve) => {
@@ -56,32 +71,19 @@ export default function CustomerList(): JSX.Element {
                   resolve();
                 }, 1000);
               }),
-            onRowUpdate: (newData, oldData) =>
-              new Promise((resolve) => {
-                setTimeout(() => {
-                  if (oldData) {
-                    const dataUpdate = [...customers];
-                    const index = (oldData.tableData || {}).id;
-                    if (index) {
-                      dataUpdate[index] = newData;
-                      setCustomers([...dataUpdate]);
-                    }
-                  }
-                  resolve();
-                }, 1000);
-              }),
-            onRowDelete: (oldData: Customer) =>
-              new Promise((resolve) => {
-                setTimeout(() => {
-                  const dataDelete = [...customers];
-                  const index = (oldData.tableData || {}).id;
-                  if (index) {
-                    dataDelete.splice(index, 1);
-                    setCustomers([...dataDelete]);
-                  }
-                  resolve();
-                }, 1000);
-              }),
+            onRowUpdate: async (newData) => {
+              await db.customers.update<Customer>(
+                { _id: newData._id },
+                { ...newData }
+              );
+              const updatedCustomers = await db.customers.find<Customer>({});
+              setCustomers(updatedCustomers);
+            },
+            onRowDelete: async (oldData: Customer) => {
+              await db.customers.remove({ _id: oldData._id }, { multi: false });
+              const updatedCustomers = await db.customers.find<Customer>({});
+              setCustomers(updatedCustomers);
+            },
           }}
         />
       </div>
