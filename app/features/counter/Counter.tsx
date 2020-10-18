@@ -1,74 +1,36 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './Counter.css';
+import db from '../../utils/db';
 import routes from '../../constants/routes.json';
-import {
-  increment,
-  decrement,
-  incrementIfOdd,
-  incrementAsync,
-  selectCount,
-} from './counterSlice';
+import { Customer, Note } from '../../utils/types';
+import styles from './Counter.css';
 
 export default function Counter(props: any) {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const { userId } = props;
-  const dispatch = useDispatch();
-  const value = useSelector(selectCount);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [customer, setCustomer] = useState<Customer>();
+  useEffect(() => {
+    db.notes
+      .find<Note>({ userId })
+      .then((dbNotes) => {
+        setNotes(dbNotes);
+      });
+    db.customers
+      .findOne<Customer>({ _id: userId })
+      .then((dbCustomer) => setCustomer(dbCustomer));
+  }, []);
+
   return (
     <div>
-      <div className={styles.backButton} data-tid="backButton">
-        <Link to={routes.HOME}>
+      <div className={styles.header}>
+        <Link to={routes.HOME} data-tid="backButton">
           <i className="fa fa-arrow-left fa-3x" />
         </Link>
+        <div className={styles.customerName}>{customer?.name}</div>
       </div>
-      <div className={`counter ${styles.counter}`} data-tid="counter">
-        <div>{userId}</div>
-        {value}
-      </div>
-      <div className={styles.btnGroup}>
-        <button
-          className={styles.btn}
-          onClick={() => {
-            dispatch(increment());
-          }}
-          data-tclass="btn"
-          type="button"
-        >
-          <i className="fa fa-plus" />
-        </button>
-        <button
-          className={styles.btn}
-          onClick={() => {
-            dispatch(decrement());
-          }}
-          data-tclass="btn"
-          type="button"
-        >
-          <i className="fa fa-minus" />
-        </button>
-        <button
-          className={styles.btn}
-          onClick={() => {
-            dispatch(incrementIfOdd());
-          }}
-          data-tclass="btn"
-          type="button"
-        >
-          odd
-        </button>
-        <button
-          className={styles.btn}
-          onClick={() => {
-            dispatch(incrementAsync());
-          }}
-          data-tclass="btn"
-          type="button"
-        >
-          async
-        </button>
-      </div>
+      {notes.map((note) => {
+        return <div key={note._id}>{note}</div>;
+      })}
     </div>
   );
 }

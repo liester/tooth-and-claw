@@ -6,7 +6,7 @@
   position: absolute;
   top: 30%;
   left: 45%;
-  font-size: 10rem;
+  font-size: 2rem;
   font-weight: bold;
   letter-spacing: -0.025em;
 }
@@ -34,4 +34,13 @@
 .btn:hover {
   color: white;
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+}
+
+.customerName {
+  font-size: xx-large;
 }

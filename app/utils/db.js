@@ -11,5 +11,6 @@ const dbFactory = (fileName) =>
 const db = {
   customers: dbFactory('customers.db'),
   schedule: dbFactory('schedule.db'),
+  notes: dbFactory('notes.db'),
 };
 module.exports = db;
