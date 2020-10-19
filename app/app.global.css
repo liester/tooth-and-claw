@@ -6,7 +6,7 @@
 
 body {
   position: relative;
-  color: white;
+  color: black;
   background-color: #232c39;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
 }
@@ -16,7 +16,7 @@ h2 {
   font-size: 2.25rem;
   font-weight: bold;
   letter-spacing: -0.025em;
-  color: #fff;
+  color: black;
 }
 
 p {
@@ -28,7 +28,7 @@ li {
 }
 
 a {
-  color: white;
+  color: black;
   opacity: 0.75;
   text-decoration: none;
 }
