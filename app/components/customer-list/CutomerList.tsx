@@ -34,6 +34,7 @@ const useStyles = makeStyles({
       borderRadius: '3px',
       color: 'rgb(35, 44, 57)',
     },
+    fontSize: 'xx-large',
   },
   header: {
     display: 'flex',
