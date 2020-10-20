@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -15,10 +14,10 @@ import Edit from '@material-ui/icons/Edit';
 import NoteAdd from '@material-ui/icons/NoteAdd';
 import db from '../../utils/db';
 import { Customer } from '../../utils/types';
-import routes from '../../constants/routes.json';
 import AddCustomerDialog from '../dialog/add-customer-dialog';
 import DeleteCustomerDialog from '../dialog/delete-customer-dialog';
 import EditCustomerDialog from '../dialog/edit-customer-dialog';
+import NoteDialog from '../dialog/notes-dialog';
 
 const useStyles = makeStyles({
   table: {
@@ -51,7 +50,6 @@ const useStyles = makeStyles({
 });
 
 export default function CustomerList(): JSX.Element {
-  const history = useHistory();
   const classes = useStyles();
   const [searchText, setSearchText] = useState<string>('');
 
@@ -66,6 +64,10 @@ export default function CustomerList(): JSX.Element {
   const [showEditCustomerDialog, setShowEditCustomerDialog] = useState<boolean>(
     false
   );
+
+  const [showAddOrUpdateNoteDialog, setShowAddOrUpdateNoteDialog] = useState<
+    boolean
+  >(false);
 
   const [selectedCustomer, setSelectedCustomer] = useState<Customer>();
 
@@ -88,7 +90,10 @@ export default function CustomerList(): JSX.Element {
         />
         <NoteAdd
           className={classes.actionIcon}
-          onClick={() => history.push(`${routes.COUNTER}/${customer._id}`)}
+          onClick={() => {
+            setSelectedCustomer(customer);
+            setShowAddOrUpdateNoteDialog(true);
+          }}
         />
       </div>
     );
@@ -192,6 +197,22 @@ export default function CustomerList(): JSX.Element {
               .then(() => {
                 refreshCustomers();
                 setShowEditCustomerDialog(false);
+              });
+          }}
+        />
+      )}
+
+      {showAddOrUpdateNoteDialog && (
+        <NoteDialog
+          open={showEditCustomerDialog}
+          onClose={() => setShowAddOrUpdateNoteDialog(false)}
+          customer={selectedCustomer}
+          onAddOrUpdateNote={(note, id) => {
+            db.customers
+              .update({ _id: id }, { note }, { multi: false })
+              .then(() => {
+                refreshCustomers();
+                setShowAddOrUpdateNoteDialog(false);
               });
           }}
         />
