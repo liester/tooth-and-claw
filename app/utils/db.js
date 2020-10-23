@@ -13,4 +13,4 @@ const db = {
   schedule: dbFactory('schedule.db'),
   notes: dbFactory('notes.db'),
 };
-module.exports = db;
+export default db;

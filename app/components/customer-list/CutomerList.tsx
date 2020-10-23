@@ -166,11 +166,13 @@ export default function CustomerList(): JSX.Element {
         <AddCustomerDialog
           open={showAddCustomerDialog}
           onClose={() => {
-            setShowAddCustomerDialog(!showAddCustomerDialog);
+            setShowAddCustomerDialog(false);
           }}
           onAddCustomer={(name, email, phone) => {
-            db.customers.insert({ name, email, phone });
-            refreshCustomers();
+            db.customers.insert({ name, email, phone }).then(() => {
+              refreshCustomers();
+              setShowAddCustomerDialog(false);
+            });
           }}
         />
       )}
@@ -183,7 +185,6 @@ export default function CustomerList(): JSX.Element {
             db.customers
               .remove({ _id: customerId }, { multi: false })
               .then(() => {
-                setErrors('Delete worked');
                 refreshCustomers();
                 setShowDeleteCustomerDialog(false);
               })
@@ -202,7 +203,6 @@ export default function CustomerList(): JSX.Element {
             db.customers
               .update({ _id: id }, { name, email, phone }, { multi: false })
               .then(() => {
-                setErrors('Edit worked');
                 refreshCustomers();
                 setShowEditCustomerDialog(false);
               })
@@ -222,7 +222,6 @@ export default function CustomerList(): JSX.Element {
             db.customers
               .update({ _id: id }, { $set: { note } }, { multi: false })
               .then(() => {
-                setErrors('Dialog worked');
                 refreshCustomers();
                 setShowAddOrUpdateNoteDialog(false);
               })
@@ -232,7 +231,7 @@ export default function CustomerList(): JSX.Element {
           }}
         />
       )}
-      <div>{errors}</div>
+      {errors && <div>{errors}</div>}
     </div>
   );
 }

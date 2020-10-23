@@ -53,7 +53,7 @@ export default function NoteDialog(props: SimpleDialogProps) {
           onClick={() => onAddOrUpdateNote(note, customer._id)}
           color="primary"
         >
-          Add
+          Update
         </Button>
       </DialogActions>
     </Dialog>
