@@ -13,7 +13,7 @@ import { Customer } from '../../utils/types';
 export interface EditCustomerDialogProps {
   open: boolean;
   onClose: () => void;
-  customer?: Customer;
+  customer: Customer;
   onEditCustomer: (
     name: string,
     email: string,

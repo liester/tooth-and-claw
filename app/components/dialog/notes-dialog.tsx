@@ -10,12 +10,13 @@ import { Customer } from '../../utils/types';
 
 const useStyles = makeStyles(() => ({
   paper: { minWidth: '500px' },
+  textarea: { width: '99%' },
 }));
 export interface SimpleDialogProps {
   open: boolean;
   onClose: () => void;
-  customer?: Customer;
-  onAddOrUpdateNote: (note, id) => void;
+  customer: Customer;
+  onAddOrUpdateNote: (note: string, id: string) => void;
 }
 
 export default function NoteDialog(props: SimpleDialogProps) {
@@ -30,16 +31,18 @@ export default function NoteDialog(props: SimpleDialogProps) {
       aria-labelledby="simple-dialog-title"
       open
       classes={{ root: classes.paper }}
+      fullWidth
     >
       <DialogTitle id="form-dialog-title">Add Customer</DialogTitle>
       <DialogContent>
         <TextareaAutosize
+          className={classes.textarea}
           rowsMin={10}
           rowsMax={10}
           aria-label="maximum height"
-          placeholder="Maximum 4 rows"
-          defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua."
+          placeholder="Add notes here"
+          defaultValue={note}
+          onChange={(event) => setNote(event.target.value)}
         />
       </DialogContent>
       <DialogActions>

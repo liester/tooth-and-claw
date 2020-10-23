@@ -51,6 +51,8 @@ const useStyles = makeStyles({
 
 export default function CustomerList(): JSX.Element {
   const classes = useStyles();
+
+  const [errors, setErrors] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
 
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -168,10 +170,11 @@ export default function CustomerList(): JSX.Element {
           }}
           onAddCustomer={(name, email, phone) => {
             db.customers.insert({ name, email, phone });
+            refreshCustomers();
           }}
         />
       )}
-      {showDeleteCustomerDialog && (
+      {showDeleteCustomerDialog && selectedCustomer && (
         <DeleteCustomerDialog
           open={showDeleteCustomerDialog}
           onClose={() => setShowDeleteCustomerDialog(false)}
@@ -180,13 +183,17 @@ export default function CustomerList(): JSX.Element {
             db.customers
               .remove({ _id: customerId }, { multi: false })
               .then(() => {
+                setErrors('Delete worked');
                 refreshCustomers();
                 setShowDeleteCustomerDialog(false);
+              })
+              .catch((error) => {
+                setErrors(error);
               });
           }}
         />
       )}
-      {showEditCustomerDialog && (
+      {showEditCustomerDialog && selectedCustomer && (
         <EditCustomerDialog
           open={showEditCustomerDialog}
           onClose={() => setShowEditCustomerDialog(false)}
@@ -195,28 +202,37 @@ export default function CustomerList(): JSX.Element {
             db.customers
               .update({ _id: id }, { name, email, phone }, { multi: false })
               .then(() => {
+                setErrors('Edit worked');
                 refreshCustomers();
                 setShowEditCustomerDialog(false);
+              })
+              .catch((error) => {
+                setErrors(error);
               });
           }}
         />
       )}
 
-      {showAddOrUpdateNoteDialog && (
+      {showAddOrUpdateNoteDialog && selectedCustomer && (
         <NoteDialog
           open={showEditCustomerDialog}
           onClose={() => setShowAddOrUpdateNoteDialog(false)}
           customer={selectedCustomer}
           onAddOrUpdateNote={(note, id) => {
             db.customers
-              .update({ _id: id }, { note }, { multi: false })
+              .update({ _id: id }, { $set: { note } }, { multi: false })
               .then(() => {
+                setErrors('Dialog worked');
                 refreshCustomers();
                 setShowAddOrUpdateNoteDialog(false);
+              })
+              .catch((error) => {
+                setErrors(error);
               });
           }}
         />
       )}
+      <div>{errors}</div>
     </div>
   );
 }
